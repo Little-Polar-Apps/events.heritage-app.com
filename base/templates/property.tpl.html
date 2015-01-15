@@ -1,0 +1,103 @@
+{loop:content}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-8">
+			<div class="thumbnail clearfix">
+				{set:image}<img src="{image}" class="pull-left" width="320" height="198" />{/set}
+				{mis:image}Missing an image, follow our guidelines{/mis}
+				<div class="caption pull-right col-sm-6">
+					<h3>{title}</h3>
+					<p>{excerpt}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<form method="post">
+			<input type="hidden" name=":html" value="true" />
+			<input type="hidden" name=":object-id" value="{unique}" />
+			<input type="hidden" name=":halo-id" value="{hash}" />
+			<div class="form-group">
+				<label for=":event-title" class="sr-only">Event title</label>
+				<input type="text" class="form-control" id="event-title" name=":event-title" placeholder="Event title">
+			</div>
+			<div class="form-inline">
+				<div class="form-group">
+					<label for=":start-date" class="sr-only">Start date</label>
+					<input type="text" class="form-control pickDate" id="start-date" name=":start-date" placeholder="Start date" value="{php}date('d/m/Y'){/php}" data-format="DD/MM/YYYY">
+				</div>
+				<div class="form-group">
+					<label for=":start-time" class="sr-only">Start time</label>
+					<input type="text" class="form-control pickTime" id="start-time" name=":start-time" placeholder="Start time" value="{php}date('g:i A'){/php}">
+				</div>
+				<div class="form-group">
+					<p class="form-control-static">to</p>
+				</div>
+				<div class="form-group">
+					<label for=":end-time" class="sr-only">End time</label>
+					<input type="text" class="form-control pickTime" id="end-time" name=":end-time" placeholder="End time" value="{php}date("g:i A", time()+60*60){/php}">
+				</div>
+				<div class="form-group">
+					<label for=":end-date" class="sr-only">End date</label>
+					<input type="text" class="form-control pickDate" id="end-date" name=":end-date" placeholder="End date" value="{php}date('d/m/Y'){/php}" data-format="DD/MM/YYYY">
+				</div>
+			</div>
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name=":ad"> All day
+				</label>
+			</div>
+			<h5>Event Details</h5>
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-2">Where</label>
+					<div class="col-sm-10">
+						<p class="form-control-static">{title}</p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for=":event-desription" class="col-sm-2">Description</label>
+					<div class="col-sm-10">
+						<textarea class="form-control" id="description" name=":event-description" rows="3"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for=":permalink" class="col-sm-2">Direct URL</label>
+					<div class="col-sm-10">
+						<input class="form-control" id="permalink" name=":permalink" value="" placeholder="e.g. http://heritage-app.com/article" />
+					</div>
+				</div>
+			</div>
+			<hr>
+			<button type="submit" class="btn btn-success btn-block" name=":save-event" id="saveEvent">Save</button>
+		</form>
+	</div>
+</div>
+<hr>
+<div class="container">
+	<div class="row">
+		<ul class="list-group" id="list-events">
+		{loop:events}
+			<li class="list-group-item" data-ident="{hash}">
+				<form method="post">
+					<input type="hidden" name="ident" value="{hash}">
+					<h4 class="list-group-item-heading">
+						<small>{dates}</small><br>
+						{title}
+					</h4>
+					{set:url}<p><a href="{url}">{url}</a></p>{/set}
+					<p class="list-group-item-text">{description}</p>
+					<hr>
+					<button type="submit" name=":edit-event" class="btn btn-primary edit">Edit</button>
+					<button type="submit" name=":delete-event" class="btn btn-danger pull-right delete">Delete</button>
+				</form>
+			</li>
+		{/loop}
+		</ul>
+	</div>
+</div>
+
+{/loop}

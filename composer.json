@@ -1,0 +1,15 @@
+{
+    "require": {
+        "slim/slim": "2.*",
+        "slim/views": "0.1.*",
+        "stripe/stripe-php": "dev-master",
+        "vlucas/phpdotenv": "*",
+        "mandrill/mandrill": "1.0.*",
+        "robmorgan/phinx": "*",
+        "hashids/hashids": "0.3.*@dev",
+        "little-polar-apps/ets": "dev-master",
+        "little-polar-apps/ets-view": "dev-master",
+        "jublonet/codebird-php": "dev-master",
+        "jwhennessey/phpinsight": "dev-master"
+    }
+}

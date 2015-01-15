@@ -1,0 +1,29 @@
+<div class="container">
+	<form method="get">
+		<input name="search" class="form-control" value="" />
+		<hr>
+		<button type="submit" class="btn btn-primary btn-block">Search</button>
+	</form>	
+</div>
+<hr>
+<div class="container">
+	{loop:content}
+	<div class="row">
+		<div class="col-sm-3">
+			<h4>{title}</h4>
+		</div>
+		<div class="col-sm-2">
+			<p class="form-control-static"><a href="http://twitter.com/{twitter}">@{twitter}</a></p>
+		</div>
+		<div class="col-sm-7">
+			<div class="col-sm-11">
+				<input class="form-control form-select" value="{yoursite}{hash}/{hrtgs}/{apikey}" onclick="select()" />
+			</div>
+			<div class="form-group">
+			<p class="form-control-static"><a href="{yoursite}{hash}/{hrtgs}/{apikey}">Go</a></p>
+			</div>
+		</div>
+	</div>
+	{/loop}
+
+</div>

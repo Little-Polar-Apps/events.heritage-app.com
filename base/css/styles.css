@@ -1,0 +1,30 @@
+html,body {
+	width:100%;
+	height:100%;
+}
+
+body {
+	padding-top: 20px;
+}
+
+*,:after,::before {
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+}
+
+.fading {
+	opacity:1;
+	transition:all 300ms linear 700ms;
+}
+
+.fading.outing {
+	opacity:0;
+}
+
+p.form-control-static {
+	margin-top: 8px;
+}
+.form-select {
+	cursor: pointer;
+}
