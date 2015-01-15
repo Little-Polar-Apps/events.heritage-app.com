@@ -72,13 +72,78 @@
 	
 	$app->map('/', function () use ($app) {
 
-	
 		$app->view->user_vars['header']['title'] = 'Home';
 		$app->render('home.tpl.html');
 	
 	})->via('GET', 'POST');
 	
-	$app->map('/crypt/:id', function ($id) use ($app, $hashids) {
+	$app->map('/login', function () use ($app) {
+		
+		if(isset($_POST['login'])) {
+
+			if(!empty($login->errors)) {
+	
+				foreach($login->errors as $error) {
+	
+					OutputMessages::setMessage($error, 'danger');
+	
+				}
+				
+				if($_SESSION['user_access_level'] == 255) {
+				
+					$app->redirect($_SERVER['REQUEST_URI'], 301);
+				
+				} else {
+					$app->pass();
+				}
+	
+			} else {
+				
+				$app->redirect('/search', 301);
+			}
+	
+		}
+		
+		$app->render('login.tpl.html');
+	
+	})->via('GET', 'POST');
+	
+	
+	$app->get('/logout', function () use ($login, $app) {
+	
+	    $login->doLogout();
+	
+		header("location: ". YOURSITE);
+		exit;
+	
+	});
+	
+	$app->map('/register', function () use ($app, $login) {
+		
+		if(isset($_POST['register'])) {
+		    if($login->errors) {
+		        foreach($login->errors as $error) {
+		        	OutputMessages::setMessage($error, 'danger');
+		        }
+		    }
+		    if($login->messages) {
+		        foreach ($login->messages as $message) {
+		            OutputMessages::setMessage($message, 'success');
+		        }
+		    }
+		}
+		
+		$app->view->user_vars['header']['title'] = 'Register';
+		$app->view->user_vars['main']['registration_successful'] = (isset($_GET['verification_code']) || $login->isRegistrationSuccessful() &&
+	   (ALLOW_USER_REGISTRATION || (ALLOW_ADMIN_TO_REGISTER_NEW_USER && $_SESSION['user_access_level'] == 255))) ? true : null;
+		$app->view->user_vars['main']['registration_verified'] = (isset($_GET['verification_code'])) ? true : null;
+	
+		$app->render('register.tpl.html');
+
+	
+	})->via('GET', 'POST');
+	
+	$app->map('/crypt/:id', function ($id) use ($app, $hashids, $login) {
 		
 		$app->view->user_vars['header']['title'] = 'Encrypt';
 		$app->view->user_vars['main']['hash'] = $hashids->encrypt($id);
@@ -86,7 +151,7 @@
 		
 	})->via('GET', 'POST');
 	
-	$app->map('/share', function () use ($app, $hashids, $database, $content) {
+	$app->map('/search', function () use ($app, $hashids, $database, $content) {
 		
 		$title = $app->request()->get('search');
 		

@@ -1,0 +1,33 @@
+<div class="login">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+				{output}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-4">
+				<form role="form" method="post">
+					<div class="form-group">
+						<label for="user_name" class="control-label">Username</label>
+						<input type="text" class="form-control input-lg" id="user_name" name="user_name" required autocomplete="off">
+					</div>
+					<div class="form-group">
+						<label for="user_password" class="control-label">Password</label>
+						<input type="password" class="form-control input-lg" id="user_password" name="user_password" required autocomplete="off">
+					</div>
+					 <div class="checkbox">
+						<label for="user_rememberme">
+							<input type="checkbox" id="user_rememberme" name="user_rememberme" value="1" /> {remember_me}
+						</label>
+					</div>
+					<hr>
+					<div class="form-group">
+						<button type="submit" name="login" class="btn btn-primary btn-block btn-lg">Log me in</button>
+						<a href="{yoursite}register" class="btn btn-link btn-block">Need an account? Register now.</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

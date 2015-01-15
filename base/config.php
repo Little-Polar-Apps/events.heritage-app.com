@@ -39,7 +39,7 @@
 	 * COOKIE_SECRET_KEY: Put a random value here to make your app more secure. When changed, all cookies are reset.
 	 */
 	
-	define("CREATOR", true); // Stops nosey people
+	define("HERITAGE", true); // Stops nosey people
 	
 	define("COOKIE_RUNTIME", 31556926);
 	define("COOKIE_DOMAIN", ".127.0.0.1");
