@@ -45,8 +45,6 @@ class Post {
 			}
 		}
 	
-	
-	
 		if($post[':html'] == true) {
 		//	strtotime($post[':start-date'] . $post[':start-time']);
 		//	strtotime($post[':end-date'] . $post[':end-time']);

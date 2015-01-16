@@ -156,7 +156,8 @@ $(document).ready(function() {
 			NProgress.done();
 		}
 		var $form = $(this).closest("form");
-		var data = $form.serialize();
+		var data = $form.serializeArray();
+			data.push({ name: $(this).attr('name'), value: $(this).val() });
 		$.post(window.location.pathname, data, function(r) {
 			var r = window.location.pathname.split('/');
 			console.log(r[1]);
@@ -164,7 +165,6 @@ $(document).ready(function() {
 			$('#event-title').val('');
 			$('#description').val('');
 			$('#permalink').val('');
-
 			NProgress.done();
 		});
 	});
