@@ -153,22 +153,26 @@
 	
 	$app->map('/search', function () use ($app, $hashids, $database, $content) {
 		
-		$title = $app->request()->get('search');
-		
-		if($title) {
-			$database->query("SELECT * FROM i_items WHERE title LIKE CONCAT('%', :title, '%') AND twitter != '' GROUP BY twitter");
-			$database->bind(":title", urldecode($title));
-		} else {
-			$database->query("SELECT * FROM i_items WHERE twitter != '' GROUP BY twitter");
-		}
-		
-		$database->execute();
-		
-		$rows = $database->resultset();
+		if($_SESSION['user_access_level'] == 255) { 
+			$title = $app->request()->get('search');
 			
-		$app->view->user_vars['header']['title'] = 'Share';
-		$app->view->set('content', PrepareContent::assignContent($rows));
-		$app->render('share.tpl.html');
+			if($title) {
+				$database->query("SELECT * FROM i_items WHERE title LIKE CONCAT('%', :title, '%') AND twitter != '' GROUP BY twitter");
+				$database->bind(":title", urldecode($title));
+			} else {
+				$database->query("SELECT * FROM i_items WHERE twitter != '' GROUP BY twitter");
+			}
+			
+			$database->execute();
+			
+			$rows = $database->resultset();
+				
+			$app->view->user_vars['header']['title'] = 'Share';
+			$app->view->set('content', PrepareContent::assignContent($rows));
+			$app->render('search.tpl.html');
+		} else {
+			$app->pass();
+		}
 		
 	})->via('GET', 'POST');
 	
