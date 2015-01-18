@@ -376,6 +376,8 @@
 			} catch(Exception $e) {
 				echo $e;
 			}
+		} else {
+			$slack->send('No upcoming events.', 'general', ':heritage:');
 		}
 		
 	});
