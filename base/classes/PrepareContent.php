@@ -71,6 +71,41 @@ class PrepareContent {
 				
 	}
 	
+	public static function getEventsItemsFeed($content, $format = 'rss') {
+		
+		global $hashids;
+			
+		if($format == 'rss') {
+			foreach($content as $k => $itemObj) {
+				
+				$content[$k]->date = date('l d M Y', $itemObj->start);
+				$content[$k]->time = date('H:i', $itemObj->start);
+				$content[$k]->enddate = date('l d M Y', $itemObj->end);
+				$content[$k]->endtime = date('H:i', $itemObj->end);
+				$content[$k]->title = htmlspecialchars($itemObj->title);
+				$content[$k]->description = htmlspecialchars($itemObj->description);
+				
+			}
+			
+		} elseif('json') {
+			
+			foreach($content as $k => $itemObj) {
+				
+				$content[$k]->date = date('l d M Y', $itemObj->start);
+				$content[$k]->time = date('H:i', $itemObj->start);
+				$content[$k]->enddate = date('l d M Y', $itemObj->end);
+				$content[$k]->endtime = date('H:i', $itemObj->end);
+				$content[$k]->title = html_entity_decode($itemObj->title);
+				$content[$k]->description = html_entity_decode($itemObj->description);
+				
+			}
+			
+		}
+		
+		return $content;
+		
+	}
+	
 	public static function getEventsItem($content) {
 		
 		global $hashids;

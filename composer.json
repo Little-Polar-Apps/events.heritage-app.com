@@ -10,6 +10,7 @@
         "little-polar-apps/ets": "dev-master",
         "little-polar-apps/ets-view": "dev-master",
         "jublonet/codebird-php": "dev-master",
-        "jwhennessey/phpinsight": "dev-master"
+        "jwhennessey/phpinsight": "dev-master",
+        "polem/slack-notifier": "dev-master" 
     }
 }

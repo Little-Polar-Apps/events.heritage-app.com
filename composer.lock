@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7ab9f73a352a87cf16aa0b43d0e1b7c8",
+    "hash": "bd0346d10da5891ea2d4f31e134e52b9",
     "packages": [
         {
             "name": "composer/installers",
-            "version": "v1.0.19",
+            "version": "v1.0.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "89d77bfbee79e16653f7162c86e602cc188471db"
+                "reference": "1bff8aa77a18f3616f468ed8000cf86a5725bac3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/89d77bfbee79e16653f7162c86e602cc188471db",
-                "reference": "89d77bfbee79e16653f7162c86e602cc188471db",
+                "url": "https://api.github.com/repos/composer/installers/zipball/1bff8aa77a18f3616f468ed8000cf86a5725bac3",
+                "reference": "1bff8aa77a18f3616f468ed8000cf86a5725bac3",
                 "shasum": ""
             },
             "replace": {
@@ -59,6 +59,7 @@
                 "Hurad",
                 "MODX Evo",
                 "OXID",
+                "SMF",
                 "Thelia",
                 "WolfCMS",
                 "agl",
@@ -97,7 +98,99 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2014-11-29 01:29:17"
+            "time": "2015-01-11 03:51:11"
+        },
+        {
+            "name": "guzzle/guzzle",
+            "version": "v3.9.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle3.git",
+                "reference": "54991459675c1a2924122afbb0e5609ade581155"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/54991459675c1a2924122afbb0e5609ade581155",
+                "reference": "54991459675c1a2924122afbb0e5609ade581155",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3",
+                "symfony/event-dispatcher": "~2.1"
+            },
+            "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-error-response": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
+            },
+            "require-dev": {
+                "doctrine/cache": "~1.3",
+                "monolog/monolog": "~1.0",
+                "phpunit/phpunit": "3.7.*",
+                "psr/log": "~1.0",
+                "symfony/class-loader": "~2.1",
+                "zendframework/zend-cache": "2.*,<2.3",
+                "zendframework/zend-log": "2.*,<2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle": "src/",
+                    "Guzzle\\Tests": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Guzzle Community",
+                    "homepage": "https://github.com/guzzle/guzzle/contributors"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2014-08-11 04:32:36"
         },
         {
             "name": "hashids/hashids",
@@ -372,6 +465,50 @@
             "time": "2014-10-16 21:08:20"
         },
         {
+            "name": "polem/slack-notifier",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/polem/slack-notifier.git",
+                "reference": "6683c3058463eb6c0a2a5679a55f129e9bbad57c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/polem/slack-notifier/zipball/6683c3058463eb6c0a2a5679a55f129e9bbad57c",
+                "reference": "6683c3058463eb6c0a2a5679a55f129e9bbad57c",
+                "shasum": ""
+            },
+            "require": {
+                "guzzle/guzzle": "~3",
+                "symfony/console": "~2.4",
+                "symfony/serializer": "~2.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3"
+            },
+            "bin": [
+                "bin/slack"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Slack\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul-Emile MINY",
+                    "email": "paulemile.miny@gmail.com"
+                }
+            ],
+            "description": "A simple slack wrapper",
+            "time": "2014-09-09 06:14:18"
+        },
+        {
             "name": "robmorgan/phinx",
             "version": "v0.4.1",
             "source": {
@@ -533,12 +670,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "e93d4f101fe0c01fb61fe820043ead545045ed3c"
+                "reference": "43a51dd585fe91f69ce6355ac8eff7dbf31e344d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/e93d4f101fe0c01fb61fe820043ead545045ed3c",
-                "reference": "e93d4f101fe0c01fb61fe820043ead545045ed3c",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/43a51dd585fe91f69ce6355ac8eff7dbf31e344d",
+                "reference": "43a51dd585fe91f69ce6355ac8eff7dbf31e344d",
                 "shasum": ""
             },
             "require": {
@@ -573,7 +710,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2014-12-23 23:59:35"
+            "time": "2015-01-14 19:21:39"
         },
         {
             "name": "symfony/class-loader",
@@ -731,6 +868,64 @@
             "time": "2015-01-06 17:50:02"
         },
         {
+            "name": "symfony/event-dispatcher",
+            "version": "v2.6.3",
+            "target-dir": "Symfony/Component/EventDispatcher",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/EventDispatcher.git",
+                "reference": "40ff70cadea3785d83cac1c8309514b36113064e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/40ff70cadea3785d83cac1c8309514b36113064e",
+                "reference": "40ff70cadea3785d83cac1c8309514b36113064e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "~2.0,>=2.0.5",
+                "symfony/dependency-injection": "~2.6",
+                "symfony/expression-language": "~2.6",
+                "symfony/stopwatch": "~2.3"
+            },
+            "suggest": {
+                "symfony/dependency-injection": "",
+                "symfony/http-kernel": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\EventDispatcher\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony EventDispatcher Component",
+            "homepage": "http://symfony.com",
+            "time": "2015-01-05 14:28:40"
+        },
+        {
             "name": "symfony/filesystem",
             "version": "v2.6.3",
             "target-dir": "Symfony/Component/Filesystem",
@@ -776,6 +971,53 @@
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
             "time": "2015-01-03 21:13:09"
+        },
+        {
+            "name": "symfony/serializer",
+            "version": "v2.6.3",
+            "target-dir": "Symfony/Component/Serializer",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Serializer.git",
+                "reference": "b147d408f7121b3f3b8f76d37f0e0e42abed7cc4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Serializer/zipball/b147d408f7121b3f3b8f76d37f0e0e42abed7cc4",
+                "reference": "b147d408f7121b3f3b8f76d37f0e0e42abed7cc4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Serializer\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony Serializer Component",
+            "homepage": "http://symfony.com",
+            "time": "2015-01-03 08:01:59"
         },
         {
             "name": "symfony/yaml",
@@ -885,7 +1127,8 @@
         "little-polar-apps/ets": 20,
         "little-polar-apps/ets-view": 20,
         "jublonet/codebird-php": 20,
-        "jwhennessey/phpinsight": 20
+        "jwhennessey/phpinsight": 20,
+        "polem/slack-notifier": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

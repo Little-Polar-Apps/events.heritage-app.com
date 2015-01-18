@@ -12,9 +12,12 @@
 	require 'base/classes/Options.php';
 	require 'base/classes/PrepareContent.php';
 	require 'base/classes/Post.php';
+	require 'base/classes/Slack.php';
 	require 'base/classes/OutputMessages.php';
 	include 'base/lib/pagination.php';
 //	require 'base/cron/cron.php';
+
+	\Codebird\Codebird::setConsumerKey('ONPQ0txSJQ6SWJBf91new4wjB', '374QWGia2g5OSGHi20Dznu0Zom0muTKwjx98Nyrb8QtRFnC1b4');
 	
 	$app        = new \Slim\Slim();
 	$login      = new PHPLogin();
@@ -25,8 +28,11 @@
 	$content    = new stdClass();
 	$menu       = new stdClass();
 	$addExtras  = new stdClass();
-	
+	$slack 		= new Slack("heritage", "HMt7775INxoEQmadRVhmTfux", "HeritageEventsBot");
+	$cb 		= \Codebird\Codebird::getInstance();
 	$hashids 	= new Hashids\Hashids('History is around us');
+	
+	$cb->setToken('226727773-VNeLLE7VkOIWsAiQH6Lt4QdQmj2Bg2hgiwue1AGR', 'Ce8ZXFyWyo4gIxHbc31xE6pwXUiBzES04O47zwXt7GFDR');
 	
 	$app->config(array(
 		'view' => new Ets(),
@@ -251,6 +257,128 @@
 		}
 		
 	})->via('GET', 'POST');
+	
+	$app->group('/api', function() use($app, $database) {
+		
+		$database->query('SELECT * FROM events_event WHERE start > :time ORDER BY start');
+		$database->bind(':time', strtotime("midnight", time()));
+		$database->execute();
+		
+		$content = $database->resultset();
+
+		$app->get('/rss', function () use ($app, $content) {
+				
+			$app->response->headers->set('Content-Type', 'application/rss+xml');
+			$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'rss'));
+			$app->render(array('rss.tpl.html'));
+	
+		});
+		
+		$app->get('/json', function () use ($app, $content) {
+		
+			$app->response->headers->set('Content-Type', 'application/json');
+			$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'json'));
+			$app->render(array('json.tpl.html'));
+	
+		});
+	
+	});
+	
+	$app->get('/cron', function () use ($app, $database, $slack, $cb) {
+				
+		$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE start > :plusday AND start < :plustwoday AND posted != 1 ORDER BY start");
+		$database->bind(':plusday', strtotime("midnight", time()));
+		$database->bind(':plustwoday', strtotime('+2 days', strtotime("23:59", time())));
+		$database->execute();
+		
+		$api = $database->resultset();
+		
+		// Parse
+		$APPLICATION_ID = APPLICATION_ID;
+		$REST_API_KEY = REST_API_KEY;
+		
+		if($database->rowCount() > 0) {
+			try {
+				$time = 0;
+				foreach($api as $row) {
+					if(date('H:i', $row['start']) == '00:00' && date('H:i', $row['end']) == '00:00') {
+						if(date('l d M Y', $row['start']) == date('l d M Y', $row['end'])) {
+							$alert = date('l d M Y', $row['start']);
+						} else {
+							$alert = date('l d M Y', $row['start']) . ' to ' . date('l d M Y', $row['end']);
+						}
+					} else {
+						if(date('l d M Y', $row['start']) == date('l d M Y', $row['end'])) {
+							$alert = date('l d M Y', $row['start']) . ' ' . date('H:i', $row['start']) . ' - ' . date('H:i', $row['end']);
+						} else {
+							$alert = date('l d M Y', $row['start']) . ' to ' . date('l d M Y', $row['end']) . ' ' . date('H:i', $row['start']) . ' - ' . date('H:i', $row['end']);
+						}
+		
+					}
+		
+					$pushTime = time() + $time;
+		
+					$url = 'https://api.parse.com/1/push';
+					$data = array(
+						'where' => [
+							'channels' => [
+								//'$in' => ['male', 'female', 'no-login']
+								'$in' => ['test']
+							],
+							'deviceType' => 'ios'
+						],
+					    "push_time" => gmdate("Y-m-d\TH:i:s\Z", $pushTime),
+					    'data' => array(
+					        'alert' => $row['title'] . ' @ ' . $row['name'] . ' - '. $alert,
+					        'hatype' => 'property',
+					        'id' => (int) $row['pid'],
+					        'sound' => 'push.caf',
+					    ),
+					);
+					$_data = json_encode($data);
+					$headers = array(
+					    'X-Parse-Application-Id: ' . $APPLICATION_ID,
+					    'X-Parse-REST-API-Key: ' . $REST_API_KEY,
+					    'Content-Type: application/json',
+					    'Content-Length: ' . strlen($_data),
+					);
+		
+					$slack->send($row['title'] . ' @ ' . $row['name'] . ' - '. $alert, 'general', ':heritage:');
+		
+					$time = $time + 15*60;
+		
+					$curl = curl_init($url);
+					curl_setopt($curl, CURLOPT_POST, 1);
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $_data);
+					curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+					curl_setopt($curl, CURLOPT_RETURNTRANSFER,1);
+					curl_exec($curl);
+		
+					$database->query('UPDATE events_event SET posted = :posted WHERE id = :id');
+					$database->bind(':posted', 1);
+					$database->bind(':id', $row['id']);
+					$database->execute();
+					
+					$cb->setToken('226727773-VNeLLE7VkOIWsAiQH6Lt4QdQmj2Bg2hgiwue1AGR', 'Ce8ZXFyWyo4gIxHbc31xE6pwXUiBzES04O47zwXt7GFDR');
+					$params = array(
+			
+					    'status' => htmlspecialchars_decode($row['title'] . ' @ ' . $row['name'] . ' - '. $alert)
+			
+					);
+			
+					$reply = $cb->statuses_update($params);
+					
+					$slack->send('Posted. ' . $row['id'], 'general', ':heritage:');
+					
+					
+				}
+		
+			} catch(Exception $e) {
+				echo $e;
+			}
+		}
+		
+	});
 
 	/**
 	 * app- Run

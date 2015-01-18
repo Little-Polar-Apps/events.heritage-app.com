@@ -131,3 +131,9 @@
 	define("ALLOW_USER_REGISTRATION", true);
 	define("ALLOW_ADMIN_TO_REGISTER_NEW_USER", true);
 	
+	/**
+	* Parse API Keys
+	*/
+	
+	define("APPLICATION_ID", getenv('PARSE_APP_ID'));
+	define("REST_API_KEY", getenv('PARSE_REST_API'));
