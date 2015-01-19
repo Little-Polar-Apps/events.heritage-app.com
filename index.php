@@ -182,6 +182,38 @@
 		
 	})->via('GET', 'POST');
 	
+	$app->get('/api(/:key)(/:format)', function($key, $format) use($app, $database) {
+		
+		if($key) {
+			$database->query('SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE MD5(dirtitle) = :dirtitle AND events_event.start >= :time ORDER BY events_event.start');
+			$database->bind(':time', strtotime("midnight", time()));
+			$database->bind(':dirtitle', $key);
+			
+		} else {
+			$database->query('SELECT * FROM events_event WHERE start > :time ORDER BY start');
+			$database->bind(':time', strtotime("midnight", time()));
+		}
+		$database->execute();
+		
+		
+		$content = $database->resultset();
+		
+		if($format === "rss") {
+				
+			$app->response->headers->set('Content-Type', 'application/rss+xml');
+			$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'rss'));
+			$app->render(array('rss.tpl.html'));
+	
+		} elseif($format === "json") {
+			
+			$app->response->headers->set('Content-Type', 'application/json');
+			$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'json'));
+			$app->render(array('json.tpl.html'));
+	
+		}
+	
+	});
+	
 	$app->map('/:id/:hrtgs/:dirtitle(/page/:number)(/:format)(/edit/:edit)', function($id, $hrtgs, $dirtitle, $number=1, $format='json', $edit=null) use ($app, $database, $hashids, $post) {
 		
 		$id_decrypt = $hashids->decrypt($id);
@@ -257,32 +289,6 @@
 		}
 		
 	})->via('GET', 'POST');
-	
-	$app->group('/api', function() use($app, $database) {
-		
-		$database->query('SELECT * FROM events_event WHERE start > :time ORDER BY start');
-		$database->bind(':time', strtotime("midnight", time()));
-		$database->execute();
-		
-		$content = $database->resultset();
-
-		$app->get('/rss', function () use ($app, $content) {
-				
-			$app->response->headers->set('Content-Type', 'application/rss+xml');
-			$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'rss'));
-			$app->render(array('rss.tpl.html'));
-	
-		});
-		
-		$app->get('/json', function () use ($app, $content) {
-		
-			$app->response->headers->set('Content-Type', 'application/json');
-			$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'json'));
-			$app->render(array('json.tpl.html'));
-	
-		});
-	
-	});
 	
 	$app->get('/cron', function () use ($app, $database, $slack, $cb) {
 				
