@@ -95,8 +95,8 @@ class PrepareContent {
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
-				$content[$k]->title = html_entity_decode($itemObj->title);
-				$content[$k]->description = html_entity_decode($itemObj->description);
+				$content[$k]->title = json_encode(html_entity_decode($itemObj->title));
+				$content[$k]->description = json_encode(html_entity_decode($itemObj->description));
 				
 			}
 			
