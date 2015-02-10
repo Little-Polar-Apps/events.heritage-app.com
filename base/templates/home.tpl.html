@@ -10,6 +10,15 @@
 			
 			<a href="/login">Login</a>
 			
+			{loop:content}
+				<div class="col-sm-12">
+					<h2>{title}</h2>
+					{descr}
+					<hr>
+					{date}
+				</div>
+			{/loop}
+			
 		</div>
 			
 	</div>

@@ -100,6 +100,19 @@ class PrepareContent {
 				
 			}
 			
+		} else {
+			
+			foreach($content as $k => $itemObj) {
+				
+				$content[$k]->date = date('l d M Y', $itemObj->start);
+				$content[$k]->time = date('H:i', $itemObj->start);
+				$content[$k]->enddate = date('l d M Y', $itemObj->end);
+				$content[$k]->endtime = date('H:i', $itemObj->end);
+				$content[$k]->title = $itemObj->title;
+				$content[$k]->descr = $itemObj->description;
+				
+			}
+			
 		}
 		
 		return $content;
