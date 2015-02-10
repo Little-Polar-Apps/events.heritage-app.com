@@ -78,9 +78,11 @@ $app->view->user_vars['main']['output']         = OutputMessages::showMessage();
 
 $app->map('/', function () use ($app, $database) {
 	
-	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= ':plusday' ORDER BY events_event.start");
+	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :plusday ORDER BY events_event.start");
 	$database->bind(':plusday', time());
 	$database->execute();
+	
+	echo time();
 	
 	$content = $database->resultset();
 	
@@ -195,8 +197,8 @@ $app->get('/api(/:key)(/:format)', function($key, $format) use($app, $database) 
 	$key = preg_replace("-8xhKhJ18Iez", "", $key);
 	
 	if($key) {
-		$database->query("SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE MD5(dirtitle) = :dirtitle AND events_event.start >= ':time' ORDER BY events_event.start");
-		$database->bind(':time', strtotime("midnight", time()));
+		$database->query("SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE MD5(dirtitle) = :dirtitle AND events_event.start > ':time' ORDER BY events_event.start");
+		$database->bind(':time', time());
 		$database->bind(':dirtitle', $key);
 		
 	} else {
