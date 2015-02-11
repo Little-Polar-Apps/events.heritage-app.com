@@ -2,17 +2,19 @@
 	
 	<div class="row">
 			
-		<div class="col-sm-8 col-sm-offset-2">
-			
-			
-			
+		<div class="col-sm-8 col-sm-offset-2">	
 			{loop:content}
-				{set:_first}
+			{set:_first}
+				{set:page:1}
 				<h1>These are Heritage Events</h1>
-			
 				<p>This is the year ahead and beyond events that Heritage App has been told about. If you would like timely reminders, <a href="http://hrt.gs/uc">download</a> Heritage App today and receive notifications direct on your phone.</p>
-				
 				{/set}
+			{/set}
+			{/loop}
+			{loop:pages}
+				{info}
+			{/loop}
+			{loop:content}
 				<div class="col-sm-12">
 					
 					<h2><small>{dates}</small><br>{title}</h2>

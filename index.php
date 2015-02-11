@@ -97,9 +97,13 @@ $app->map('/(page/:number)', function ($number=1) use ($app, $database) {
 	
 	$content = $database->resultset();
 	
+	foreach($content as $k => $v) {
+		$content[$k]->page = $number;
+	}
+	
 	$app->view->set('content', PrepareContent::getEventsItems($content));
 	
-	$app->view->user_vars['header']['title'] = 'Home';
+	$app->view->user_vars['header']['title'] = ($number > 1) ? 'Heritage Events - Page ' . $number : 'Heritage Events';
 	$app->render('home.tpl.html', array(
 		'nav'     => $nav
 	));
