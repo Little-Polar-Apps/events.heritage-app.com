@@ -3,10 +3,6 @@ html,body {
 	height:100%;
 }
 
-body {
-	padding-top: 20px;
-}
-
 *,:after,::before {
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
@@ -27,4 +23,238 @@ p.form-control-static {
 }
 .form-select {
 	cursor: pointer;
+}
+
+/*
+Theme Name: New 40
+Theme URL: http://heritage-app.com/i/
+Description: Courteously provided by your friends at Expanse Content Management System We heart your face.
+Version: 1.0
+Author: Ian Tearle
+Author URL: http://heritage-app.comSite: heritage
+*/
+
+/*
+-------------------------------------------------
+Global values
+=================================================
+*/
+body {
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	font-size: 16px;
+	color: #4a4a4a;
+
+	-webkit-font-smoothing: antialiased;
+	-webkit-overflow-scrolling: touch;
+}
+/* Titles */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    color: #333;
+}
+
+h1 {
+	font-size: 40px;
+}
+
+h2.title {
+	font-weight: bold;
+}
+h3 {
+	color: #95a5a6;
+	font-weight: 400;
+}
+
+h4 {
+	color: #95a5a6;
+	font-weight: 400;
+	font-size: 20px;
+}
+
+/* Paragraph & Typographic */
+p {
+    line-height: 28px;
+    margin-bottom: 25px;
+    font-size: 16px;
+}
+
+.centered {
+    margin: 0 auto;
+}
+/* Links */
+a {
+    color: #3498db;
+    word-wrap: break-word;
+
+    -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -o-transition: color 0.1s ease-in, background 0.1s ease-in;
+    transition: color 0.1s ease-in, background 0.1s ease-in;
+}
+
+a:hover,
+a:focus {
+    color: #7b7b7b;
+    text-decoration: none;
+    outline: 0;
+}
+
+a:before,
+a:after {
+    -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -o-transition: color 0.1s ease-in, background 0.1s ease-in;
+    transition: color 0.1s ease-in, background 0.1s ease-in;
+}
+
+ hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+/* Helpers */
+
+.mt {
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+
+i {
+	margin: 8px;
+	color: #3498db;
+}
+
+.btn-clear {
+  background-color: #ffffff;
+  border-color: #c1392b;
+  color: #c1392b;
+}
+.btn-clear:hover,
+.btn-clear:focus,
+.btn-clear:active,
+.btn-clear.active {
+  background-color: #f2f2f2;
+  border-color: #e6e6e6;
+}
+.btn-clear.disabled:hover,
+.btn-clear.disabled:focus,
+.btn-clear.disabled:active,
+.btn-clear.disabled.active,
+.btn-clear[disabled]:hover,
+.btn-clear[disabled]:focus,
+.btn-clear[disabled]:active,
+.btn-clear[disabled].active,
+fieldset[disabled] .btn-clear:hover,
+fieldset[disabled] .btn-clear:focus,
+fieldset[disabled] .btn-clear:active,
+fieldset[disabled] .btn-clear.active {
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+
+.img-rounded {
+	border-radius: 17.544%;
+}
+
+.article {
+	overflow: hidden;
+}
+
+.properties {
+	max-width: 620px;
+	margin: 0 auto;
+}
+
+.property:not(:first-child) {
+	border-top: solid 10px #F1F1F1;
+}
+.property {
+	border-bottom: solid #aaaaaa 1px;
+}
+	.img-container {
+		padding-left: 0;
+		padding-right: 0;
+		position: relative;
+	}
+	.meta {
+		width: 100%;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		padding-top: 20px;
+		/*background-color: #7f7f7f;*/
+		background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.00)), to(rgba(0, 0, 0, 0.80)));
+		background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.00), rgba(0, 0, 0, 0.80));
+		background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.00), rgba(0, 0, 0, 0.80));
+		background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.00), rgba(0, 0, 0, 0.80));
+		background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 0.00), rgba(0, 0, 0, 0.80));
+		background-image: linear-gradient(top, rgba(255, 255, 255, 0.00), rgba(0, 0, 0, 0.80));
+		filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#ffffff', EndColorStr='#000000');
+	}
+		.meta h2 {
+			font-size: 14px;
+			color: #ffffff;
+		}
+		.options {
+			font-size: 24px;
+			color: #ffffff;
+			cursor: pointer;
+		}
+		.options li {
+			text-align: center;
+		}
+		.options a {
+			color: #ffffff;
+		}
+			.options a:hover {
+				text-decoration: none;
+			}
+		.options-red,
+		.options-red a {
+			color: #c1392b;
+		}
+
+.footer {
+	background-color: #f1f1f1;
+	padding-top: 20px;
+}
+
+.header {
+	background-color: #c1392b;
+	padding-top: 54px;
+	padding-bottom: 10px;
+}
+
+.navbar-default {
+	background-color: #c1392b;
+	border-color: transparent;
+}
+
+.navbar-default .navbar-brand {
+	color: white;
+}
+
+.navbar-default .navbar-nav > li > a {
+	color: white;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+	color: white;
+	background-color: #c1392b;
+}
+
+
+@media (max-width: 768px) {
+  .nav-justified > li {
+    display: table-cell;
+    width: 1%;
+  }
 }

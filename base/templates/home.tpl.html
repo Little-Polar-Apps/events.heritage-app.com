@@ -4,23 +4,36 @@
 			
 		<div class="col-sm-8 col-sm-offset-2">
 			
-			<h1>Welcome</h1>
 			
-			<p>Arrived here by accident or just looking?</p>
-			
-			<a href="/login">Login</a>
 			
 			{loop:content}
+				{set:_first}
+				<h1>These are Heritage Events</h1>
+			
+				<p>This is the year ahead and beyond events that Heritage App has been told about. If you would like timely reminders, <a href="http://hrt.gs/uc">download</a> Heritage App today and receive notifications direct on your phone.</p>
+				
+				{/set}
 				<div class="col-sm-12">
-					<h2>{title}</h2>
-					{descr}
+					
+					<h2><small>{dates}</small><br>{title}</h2>
+					<p>{descr}</p>
+					<p>Visit <a href="http://hrt.gs/{hrtgs}" target="_blank">{name}<span class="ss-upright"></span></a> today</p>
+					
 					<hr>
-					{date}
 				</div>
 			{/loop}
-			
 		</div>
 			
 	</div>
+	{loop:pages}
+	<div class="row">
+		<div class="col-sm-12 text-center">
+			<ul class="pagination">
+				{prev}{numbers}{next}
+			</ul>
+		</div>
+	</div>
+	{/loop}
+
 		
 </div>

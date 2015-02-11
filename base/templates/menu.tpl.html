@@ -1,0 +1,30 @@
+<div class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{yoursite}"><b>{sitename}</b></a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="/login">Have an account?</a></li>
+				{loop:custom_menu}
+					<li class="{set:current} active {/set}{set:subcats} dropdown {/set}">
+						{mis:subcats}<a href="{link}">{title}</a>{/mis}
+						{set:subcats}
+						<a href="{link}" class="dropdown-toggle" data-toggle="dropdown">{title} <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+						{loop:subcats}
+							<li><a href="{link}">{title}</a></li>
+						{/loop}
+						</ul>
+						{/set}
+					</li>
+				{/loop}
+			</ul>
+		</div><!--/.nav-collapse -->
+	</div>
+</div>
