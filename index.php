@@ -14,7 +14,7 @@ require 'base/classes/PrepareContent.php';
 require 'base/classes/Post.php';
 require 'base/classes/Slack.php';
 require 'base/classes/OutputMessages.php';
-include 'base/lib/pagination.php';
+include 'base/classes/pagination.php';
 //	require 'base/cron/cron.php';
 
 \Codebird\Codebird::setConsumerKey('ONPQ0txSJQ6SWJBf91new4wjB', '374QWGia2g5OSGHi20Dznu0Zom0muTKwjx98Nyrb8QtRFnC1b4');
@@ -45,6 +45,7 @@ $app->view->parserCacheDirectory = dirname(__FILE__) . '/base/cache';
 $app->view->setTemplatesDirectory(dirname(__FILE__) . '/base/templates');
 
 $addExtras->yoursite            = YOURSITE;
+$addExtras->sitename            = 'Heritage Events';
 $addExtras->copyrightdate       = isset($addExtras->copyrightdate) ? $addExtras->copyrightdate : date('Y');
 $addExtras->logged_in           = $login->isUserLoggedIn();
 $addExtras->themetemplates      = YOURSITE.'base/templates';
@@ -76,20 +77,32 @@ $app->view->user_vars['main']['remember_me']    = WORDING_REMEMBER_ME;
 $app->view->user_vars['main']['output']         = OutputMessages::showMessage();
 
 
-$app->map('/', function () use ($app, $database) {
+$app->map('/(page/:number)', function ($number=1) use ($app, $database) {
 	
 	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :plusday ORDER BY events_event.start");
 	$database->bind(':plusday', time());
 	$database->execute();
 	
-	echo time();
+	$total     = $database->rowCount();
+	$max       = 6;
+	$maxNum    = 100;
+
+	$nav       = new Pagination($max, $total, $maxNum, (int) $number, '');
+	
+	$database->query("SELECT events_event.*, i_items.title AS name, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :plusday ORDER BY events_event.start LIMIT :limit,:max");
+	$database->bind(':plusday', time());
+	$database->bind(':limit', $nav->start());
+	$database->bind(':max', $max);
+	$database->execute();
 	
 	$content = $database->resultset();
 	
-	$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'html'));
+	$app->view->set('content', PrepareContent::getEventsItems($content));
 	
 	$app->view->user_vars['header']['title'] = 'Home';
-	$app->render('home.tpl.html');
+	$app->render('home.tpl.html', array(
+		'nav'     => $nav
+	));
 
 })->via('GET', 'POST');
 
@@ -197,7 +210,7 @@ $app->get('/api(/:key)(/:format)', function($key, $format) use($app, $database) 
 	$key = preg_replace("-8xhKhJ18Iez", "", $key);
 	
 	if($key) {
-		$database->query("SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE MD5(dirtitle) = :dirtitle AND events_event.start > ':time' ORDER BY events_event.start");
+		$database->query("SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE MD5(dirtitle) = :dirtitle AND events_event.start > :time ORDER BY events_event.start");
 		$database->bind(':time', time());
 		$database->bind(':dirtitle', $key);
 		
@@ -304,7 +317,7 @@ $app->map('/:id/:hrtgs/:dirtitle(/page/:number)(/:format)(/edit/:edit)', functio
 
 $app->get('/cron', function () use ($app, $database, $slack, $cb) {
 			
-	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE start > ':plusday' AND start < ':plustwoday' AND posted != 1 ORDER BY start");
+	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE start > :plusday AND start < :plustwoday AND posted != 1 ORDER BY start");
 	$database->bind(':plusday', strtotime("midnight", time()));
 	$database->bind(':plustwoday', strtotime('+2 days', strtotime("23:59", time())));
 	$database->execute();
@@ -395,7 +408,13 @@ $app->get('/cron', function () use ($app, $database, $slack, $cb) {
 			echo $e;
 		}
 	} else {
-		$slack->send('No upcoming events.', 'general', ':heritage:');
+		$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE start > :plusday AND posted != 1 ORDER BY start LIMIT 1 ");
+		$database->bind(':plusday', strtotime("midnight", time()));
+		$database->execute();
+		
+		$next = $database->single();
+		
+		$slack->send('No upcoming events. Next is ' . $next->title . ' on ' . date('l d M Y', $next->start), 'general', ':heritage:');
 	}
 	
 });
