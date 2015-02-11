@@ -64,6 +64,8 @@ class PrepareContent {
 			$content[$k]->hash = $hashids->encrypt($itemObj->id);
 			$content[$k]->unique = uniqid();
 			$content[$k]->dates = $dates;
+			$content[$k]->title = htmlspecialchars($itemObj->title);
+			$content[$k]->descr = htmlspecialchars($itemObj->description);
 			
 		}
 		
@@ -87,7 +89,7 @@ class PrepareContent {
 				
 			}
 			
-		} elseif('json') {
+		} elseif($format == 'json') {
 			
 			foreach($content as $k => $itemObj) {
 				
@@ -108,8 +110,8 @@ class PrepareContent {
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
-				$content[$k]->title = $itemObj->title;
-				$content[$k]->descr = $itemObj->description;
+				$content[$k]->title = htmlspecialchars($itemObj->title);
+				$content[$k]->descr = htmlspecialchars($itemObj->description);
 				
 			}
 			
