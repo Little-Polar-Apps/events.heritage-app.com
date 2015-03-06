@@ -1,8 +1,11 @@
 <?php
-	
-	session_start();	
+
+	session_start();
 	date_default_timezone_set("Europe/London");
-	
+
+	define('ETS_TEMPLATESPATH', dirname(__FILE__) . '/templates');
+	define('ETS_THEMEFILEPATH', dirname(__FILE__));
+
 	/**
 	 * Configuration for: Database Connection
 	 * This is the place where your database login constants are saved
@@ -20,9 +23,9 @@
 	define("DB_NAME", getenv('DB_NAME'));
 	define("DB_USER", getenv('DB_USER'));
 	define("DB_PASS", getenv('DB_PASSWORD'));
-	
+
 	define("YOURSITE", getenv('YOURSITE'));
-	
+
 	/**
 	 * Configuration for: Cookies
 	 * Please note: The COOKIE_DOMAIN needs the domain where your app is,
@@ -38,13 +41,13 @@
 	 * COOKIE_DOMAIN: The domain where the cookie is valid for, like '.mydomain.com'
 	 * COOKIE_SECRET_KEY: Put a random value here to make your app more secure. When changed, all cookies are reset.
 	 */
-	
+
 	define("HERITAGE", true); // Stops nosey people
-	
+
 	define("COOKIE_RUNTIME", 31556926);
 	define("COOKIE_DOMAIN", ".127.0.0.1");
 	define("COOKIE_SECRET_KEY", "1gp@TMPS{+$78sfpMJFe-92s");
-	
+
 	/**
 	 * Configuration for: Email server credentials
 	 *
@@ -76,7 +79,7 @@
 	define("EMAIL_SMTP_PASSWORD", getenv('EMAIL_PASSWORD'));
 	define("EMAIL_SMTP_PORT", 587);
 	define("EMAIL_SMTP_ENCRYPTION", "tls");
-	
+
 	/**
 	 * Configuration for: password reset email data
 	 * Set the absolute URL to password_reset.php, necessary for email password reset links
@@ -86,7 +89,7 @@
 	define("EMAIL_PASSWORDRESET_FROM_NAME", "Heritage Events");
 	define("EMAIL_PASSWORDRESET_SUBJECT", "Password reset for Heritage Events");
 	define("EMAIL_PASSWORDRESET_CONTENT", "Please click on this link to reset your password:");
-	
+
 	/**
 	 * Configuration for: verification email data
 	 * Set the absolute URL to register.php, necessary for email verification links
@@ -96,7 +99,7 @@
 	define("EMAIL_VERIFICATION_FROM_NAME", "Heritage Events");
 	define("EMAIL_VERIFICATION_SUBJECT", "Account activation for Heritage Events");
 	define("EMAIL_VERIFICATION_CONTENT", "Please click on this link to activate your account:");
-	
+
 	/**
 	 * Configuration for: Hashing strength
 	 * This is the place where you define the strength of your password hashing/salting
@@ -121,7 +124,7 @@
 	 * This constant will be used in the login and the registration class.
 	 */
 	define("HASH_COST_FACTOR", "10");
-	
+
 	/**
 	 * Configuration for: Registration
 	 *
@@ -130,10 +133,10 @@
 	 */
 	define("ALLOW_USER_REGISTRATION", true);
 	define("ALLOW_ADMIN_TO_REGISTER_NEW_USER", true);
-	
+
 	/**
 	* Parse API Keys
 	*/
-	
+
 	define("APPLICATION_ID", getenv('PARSE_APP_ID'));
 	define("REST_API_KEY", getenv('PARSE_REST_API'));
