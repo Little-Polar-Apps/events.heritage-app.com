@@ -140,11 +140,14 @@ $app->map('/(:year/:month)(/page/:number)', function ($year=2015, $month=1, $num
 	}
 
 	$app->view->set('content', PrepareContent::getEventsItems($content));
+	$app->view->add_loop(PrepareContent::yearPagination(), 'months');
 
 	$app->view->user_vars['header']['title'] = ($number > 1) ? 'Heritage Events - Page ' . $number : 'Heritage Events';
 	$app->render('home.tpl.html', array(
 		'nav'     => $nav
 	));
+
+
 
 })->via('GET', 'POST');
 

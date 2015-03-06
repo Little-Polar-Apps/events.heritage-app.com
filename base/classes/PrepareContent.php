@@ -22,9 +22,9 @@ class PrepareContent {
 	}
 
 	public static function assignContent($content, $extraVars = array()) {
-		
+
 		global $hashids;
-	
+
 		foreach($content as $k => $itemObj) {
 
 			$content[$k] = $itemObj;
@@ -35,18 +35,18 @@ class PrepareContent {
 			$content[$k]->apikey = md5($itemObj->dirtitle);
 			$content[$k]->yoursite = YOURSITE;
 			$content[$k]->events = self::getEventsItems($extraVars);
-			
+
 		}
 
 		return $content;
 	}
-	
+
 	public static function getEventsItems($content) {
-		
+
 		global $hashids;
-			
+
 		foreach($content as $k => $itemObj) {
-			
+
 			if(date('H:i', $itemObj->start) == '00:00' && date('H:i', $itemObj->end) == '00:00') {
 				if(date('l d M Y', $itemObj->start) == date('l d M Y', $itemObj->end)) {
 					$dates = date('l d M Y', $itemObj->start);
@@ -60,72 +60,72 @@ class PrepareContent {
 					$dates = date('l d M Y', $itemObj->start) . ' to ' . date('l d M Y', $itemObj->end) . ' ' . date('H:i', $itemObj->start) . ' - ' . date('H:i', $itemObj->end);
 				}
 			}
-			
+
 			$content[$k]->hash = $hashids->encrypt($itemObj->id);
 			$content[$k]->unique = uniqid();
 			$content[$k]->dates = $dates;
 			$content[$k]->title = htmlspecialchars($itemObj->title);
 			$content[$k]->descr = htmlspecialchars($itemObj->description);
-			
+
 		}
-		
+
 		return $content;
-				
+
 	}
-	
+
 	public static function getEventsItemsFeed($content, $format = 'rss') {
-		
+
 		global $hashids;
-			
+
 		if($format == 'rss') {
 			foreach($content as $k => $itemObj) {
-				
+
 				$content[$k]->date = date('l d M Y', $itemObj->start);
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
 				$content[$k]->title = htmlspecialchars($itemObj->title);
 				$content[$k]->description = htmlspecialchars($itemObj->description);
-				
+
 			}
-			
+
 		} elseif($format == 'json') {
-			
+
 			foreach($content as $k => $itemObj) {
-				
+
 				$content[$k]->date = date('l d M Y', $itemObj->start);
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
 				$content[$k]->title = json_encode(html_entity_decode($itemObj->title));
 				$content[$k]->description = json_encode(html_entity_decode($itemObj->description));
-				
+
 			}
-			
+
 		} else {
-			
+
 			foreach($content as $k => $itemObj) {
-				
+
 				$content[$k]->date = date('l d M Y', $itemObj->start);
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
 				$content[$k]->title = htmlspecialchars($itemObj->title);
 				$content[$k]->descr = htmlspecialchars($itemObj->description);
-				
+
 			}
-			
+
 		}
-		
+
 		return $content;
-		
+
 	}
-	
+
 	public static function getEventsItem($content) {
-		
+
 		global $hashids;
-		
-			
+
+
 			if(date('H:i', $content->start) == '00:00' && date('H:i', $content->end) == '00:00') {
 				if(date('l d M Y', $content->start) == date('l d M Y', $content->end)) {
 					$dates = date('l d M Y', $content->start);
@@ -139,17 +139,17 @@ class PrepareContent {
 					$dates = date('l d M Y', $content->start) . ' to ' . date('l d M Y', $content->end) . ' ' . date('H:i', $content->start) . ' - ' . date('H:i', $content->end);
 				}
 			}
-			
+
 			$content->hash = $hashids->encrypt($content->id);
 			$content->unique = uniqid();
 			$content->dates = $dates;
 			$content->allday = (date('l d M Y', $content->start) == date('l d M Y', $content->end)) ? 'checked="checked" ' : false;
-			
-		
+
+
 		return $content;
-				
+
 	}
-	
+
 	public static function getFeedsItems($user_id, $limit=null, $max=null) {
 
 		$database = new Database();
@@ -224,6 +224,22 @@ class PrepareContent {
 			$content[$k]->permalink = $itemObj->feed_url;
 			$content[$k]->date = gmdate(self::$dateformat, $itemObj->feed_date + self::$timeoffset);
 			$content[$k]->time = gmdate(self::$timeformat, $itemObj->feed_date + self::$timeoffset);
+		}
+
+		return $content;
+
+	}
+
+	public static function yearPagination() {
+
+
+		for($m=1; $m<=12; $m++) {
+			$year = date('Y');
+			$month = date('F', mktime(0,0,0,$m, 1, date('Y')));
+			if(strtotime($month . ' ' . $year) < strtotime('last day of last month')) {
+				$year = '2016';
+			}
+			$content[] = (object) array('month'=>$month, 'link'=>YOURSITE.$year.'/'.strtolower($month));
 		}
 
 		return $content;

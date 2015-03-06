@@ -1,8 +1,8 @@
 <div class="container">
-	
+
 	<div class="row">
-			
-		<div class="col-sm-8 col-sm-offset-2">	
+
+		<div class="col-sm-8 col-sm-offset-2">
 			{loop:content}
 			{set:_first}
 				{set:page:1}
@@ -16,16 +16,16 @@
 			{/loop}
 			{loop:content}
 				<div class="col-sm-12">
-					
+
 					<h2><small>{dates}</small><br>{title}</h2>
 					<p>{descr}</p>
 					<p>Visit <a href="http://hrt.gs/{hrtgs}" target="_blank">{name}<span class="ss-upright"></span></a> today</p>
-					
+
 					<hr>
 				</div>
 			{/loop}
 		</div>
-			
+
 	</div>
 	{loop:pages}
 	<div class="row">
@@ -37,5 +37,15 @@
 	</div>
 	{/loop}
 
-		
+	<div class="row">
+		<div class="col-sm-12 text-center">
+			<ul class="pagination">
+				{loop:months}
+				<li><a href="{link}">{month}</a></li>
+				{/loop}
+			</ul>
+		</div>
+	</div>
+
+
 </div>
