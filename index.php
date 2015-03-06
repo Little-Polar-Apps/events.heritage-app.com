@@ -102,6 +102,7 @@ $app->map('/(page/:number)', function ($number=1) use ($app, $database) {
 	}
 
 	$app->view->set('content', PrepareContent::getEventsItems($content));
+	$app->view->add_loop(PrepareContent::yearPagination(), 'months');
 
 	$app->view->user_vars['header']['title'] = ($number > 1) ? 'Heritage Events - Page ' . $number : 'Heritage Events';
 	$app->render('home.tpl.html', array(
