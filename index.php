@@ -110,6 +110,44 @@ $app->map('/(page/:number)', function ($number=1) use ($app, $database) {
 
 })->via('GET', 'POST');
 
+$app->map('/(:year/:month)(/page/:number)', function ($year=2015, $month=1, $number=1) use ($app, $database) {
+
+	$nmonth = date('m',strtotime($month));
+	$nyear = date('Y',strtotime($year));
+
+	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE MONTH(FROM_UNIXTIME(start)) = :month AND YEAR(FROM_UNIXTIME(start)) = :year ORDER BY events_event.start");
+	$database->bind(':month', $nmonth);
+	$database->bind(':year', $nyear);
+	$database->execute();
+
+	$total     = $database->rowCount();
+	$max       = 6;
+	$maxNum    = 100;
+
+	$nav       = new Pagination($max, $total, $maxNum, (int) $number, '/'.$year.'/'.$month);
+
+	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE MONTH(FROM_UNIXTIME(start)) = :month AND YEAR(FROM_UNIXTIME(start)) = :year ORDER BY events_event.start LIMIT :limit,:max");
+	$database->bind(':month', $nmonth);
+	$database->bind(':year', $nyear);
+	$database->bind(':limit', $nav->start());
+	$database->bind(':max', $max);
+	$database->execute();
+
+	$content = $database->resultset();
+
+	foreach($content as $k => $v) {
+		$content[$k]->page = $number;
+	}
+
+	$app->view->set('content', PrepareContent::getEventsItems($content));
+
+	$app->view->user_vars['header']['title'] = ($number > 1) ? 'Heritage Events - Page ' . $number : 'Heritage Events';
+	$app->render('home.tpl.html', array(
+		'nav'     => $nav
+	));
+
+})->via('GET', 'POST');
+
 $app->map('/login', function () use ($app) {
 
 	if(isset($_POST['login'])) {
@@ -243,78 +281,83 @@ $app->get('/api(/:key)(/:format)', function($key, $format) use($app, $database) 
 
 });
 
-$app->map('/:id/:hrtgs/:dirtitle(/page/:number)(/:format)(/edit/:edit)', function($id, $hrtgs, $dirtitle, $number=1, $format='json', $edit=null) use ($app, $database, $hashids, $post) {
+$app->map('/:id/:hrtgs/:dirtitle(/page/:number)(/:format)(/edit/:edit)', function($id, $hrtgs, $dirtitle, $number=1, $format=null, $edit=null) use ($app, $database, $hashids, $post, $login) {
 
-	$id_decrypt = $hashids->decrypt($id);
+	if($login->isUserLoggedIn()) {
 
-	$database->query("SELECT * FROM i_items WHERE id = :id AND hrtgs = :hrtgs AND MD5(dirtitle) = :dirtitle");
-	$database->bind(':id', $id_decrypt[0]);
-	$database->bind(':hrtgs', $hrtgs);
-	$database->bind(':dirtitle', $dirtitle);
-	$database->execute();
+		$id_decrypt = $hashids->decrypt($id);
 
-	$rows = $database->resultset();
-
-	if(!empty($_POST)) {
-		if(isset($_POST[':save-event'])) {
-		    $post->saveEvent($_POST, $id_decrypt);
-		    $app->redirect($_SERVER['REQUEST_URI'], 301);
-		} elseif(isset($_POST['deleting'])) {
-			$post->deleteEvent($_POST);
-		    $app->redirect($_SERVER['REQUEST_URI'], 301);
-		} elseif(isset($_POST[':edit-event'])) {
-		    $app->redirect($_SERVER['REQUEST_URI'] . '/edit/'.$_POST['ident'], 301);
-		} elseif(isset($_POST['editing'])) {
-			$post->editEvent($_POST, $id_decrypt);
-			$app->redirect("/$id/$hrtgs/$dirtitle", 301);
-		}
-	}
-
-
-	if($edit != null) {
-
-		$ident = $hashids->decrypt($edit);
-
-		if(!$ident) {
-			$app->pass();
-		}
-
-		$database->query('SELECT * FROM events_event WHERE pid = :pid AND id = :id ORDER BY start');
-		$database->bind(':pid', $id_decrypt[0]);
-		$database->bind(':id', $ident[0]);
+		$database->query("SELECT * FROM i_items WHERE id = :id AND hrtgs = :hrtgs AND MD5(dirtitle) = :dirtitle");
+		$database->bind(':id', $id_decrypt[0]);
+		$database->bind(':hrtgs', $hrtgs);
+		$database->bind(':dirtitle', $dirtitle);
 		$database->execute();
 
-		$events = $database->single();
+		$rows = $database->resultset();
 
-		if($events->pid == $id_decrypt[0]) {
-
-			$events->parentid = $hashids->encrypt($id_decrypt[0]);
-			$events->hrtgs = $hrtgs;
-			$events->dirtitle = $dirtitle;
-
-			$app->view->user_vars['header']['title'] = 'Edit';
-			$app->view->set('content', PrepareContent::getEventsItem($events));
-			$app->render('edit.tpl.html');
-		} else {
-			$app->pass();
+		if(!empty($_POST)) {
+			if(isset($_POST[':save-event'])) {
+			    $post->saveEvent($_POST, $id_decrypt);
+			    $app->redirect($_SERVER['REQUEST_URI'], 301);
+			} elseif(isset($_POST['deleting'])) {
+				$post->deleteEvent($_POST);
+			    $app->redirect($_SERVER['REQUEST_URI'], 301);
+			} elseif(isset($_POST[':edit-event'])) {
+			    $app->redirect($_SERVER['REQUEST_URI'] . '/edit/'.$_POST['ident'], 301);
+			} elseif(isset($_POST['editing'])) {
+				$post->editEvent($_POST, $id_decrypt);
+				$app->redirect("/$id/$hrtgs/$dirtitle", 301);
+			}
 		}
-		exit;
 
-	}
 
-	$database->query('SELECT * FROM events_event WHERE pid = :pid AND start > :time ORDER BY start');
-	$database->bind(':pid', $id_decrypt[0]);
-	$database->bind(':time', strtotime("midnight", time()));
-	$database->execute();
+		if($edit != null) {
 
-	$events = $database->resultset();
+			$ident = $hashids->decrypt($edit);
 
-	if($rows) {
+			if(!$ident) {
+				$app->pass();
+			}
 
-		$app->view->user_vars['header']['title'] = 'Add an event';
-		$app->view->set('content', PrepareContent::assignContent($rows, $events));
-		$app->render('property.tpl.html');
+			$database->query('SELECT * FROM events_event WHERE pid = :pid AND id = :id ORDER BY start');
+			$database->bind(':pid', $id_decrypt[0]);
+			$database->bind(':id', $ident[0]);
+			$database->execute();
 
+			$events = $database->single();
+
+			if($events->pid == $id_decrypt[0]) {
+
+				$events->parentid = $hashids->encrypt($id_decrypt[0]);
+				$events->hrtgs = $hrtgs;
+				$events->dirtitle = $dirtitle;
+
+				$app->view->user_vars['header']['title'] = 'Edit';
+				$app->view->set('content', PrepareContent::getEventsItem($events));
+				$app->render('edit.tpl.html');
+			} else {
+				$app->pass();
+			}
+			exit;
+
+		}
+
+		$database->query('SELECT * FROM events_event WHERE pid = :pid AND start > :time ORDER BY start');
+		$database->bind(':pid', $id_decrypt[0]);
+		$database->bind(':time', strtotime("midnight", time()));
+		$database->execute();
+
+		$events = $database->resultset();
+
+		if($rows) {
+
+			$app->view->user_vars['header']['title'] = 'Add an event';
+			$app->view->set('content', PrepareContent::assignContent($rows, $events));
+			$app->render('property.tpl.html');
+
+		}
+	} else {
+		$app->pass();
 	}
 
 })->via('GET', 'POST');
