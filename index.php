@@ -228,7 +228,7 @@ $app->map('/crypt/:id', function ($id) use ($app, $hashids, $login) {
 
 $app->map('/search', function () use ($app, $hashids, $database, $content) {
 
-	if($_SESSION['user_access_level'] == 255) {
+	if(isset($_SESSION['user_access_level']) && $_SESSION['user_access_level'] == 255) {
 		$title = $app->request()->get('search');
 
 		if($title) {
