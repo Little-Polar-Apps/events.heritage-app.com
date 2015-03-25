@@ -246,7 +246,7 @@ $app->map('/search', function () use ($app, $hashids, $database, $content) {
 		$app->view->set('content', PrepareContent::assignContent($rows));
 		$app->render('search.tpl.html');
 	} else {
-		$app->pass();
+		$app->redirect('/', 301);
 	}
 
 })->via('GET', 'POST');
