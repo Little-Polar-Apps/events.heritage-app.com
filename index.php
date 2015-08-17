@@ -79,7 +79,7 @@ $app->view->user_vars['main']['output']         = OutputMessages::showMessage();
 
 $app->map('/(page/:number)', function ($number=1) use ($app, $database) {
 
-	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :plusday ORDER BY events_event.start");
+	$database->query("SELECT events_event.*, i_items.title AS name, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :plusday ORDER BY events_event.start");
 	$database->bind(':plusday', time());
 	$database->execute();
 
@@ -116,7 +116,7 @@ $app->map('/(:year/:month)(/page/:number)', function ($year=2015, $month=1, $num
 	$nmonth = date('m',strtotime($month));
 	$nyear = date('Y',strtotime($year));
 
-	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE MONTH(FROM_UNIXTIME(start)) = :month AND YEAR(FROM_UNIXTIME(start)) = :year ORDER BY events_event.start");
+	$database->query("SELECT events_event.*, i_items.title AS name, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE MONTH(FROM_UNIXTIME(start)) = :month AND YEAR(FROM_UNIXTIME(start)) = :year ORDER BY events_event.start");
 	$database->bind(':month', $nmonth);
 	$database->bind(':year', $nyear);
 	$database->execute();
@@ -127,7 +127,7 @@ $app->map('/(:year/:month)(/page/:number)', function ($year=2015, $month=1, $num
 
 	$nav       = new Pagination($max, $total, $maxNum, (int) $number, '/'.$year.'/'.$month);
 
-	$database->query("SELECT events_event.*, i_items.title AS name FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE MONTH(FROM_UNIXTIME(start)) = :month AND YEAR(FROM_UNIXTIME(start)) = :year ORDER BY events_event.start LIMIT :limit,:max");
+	$database->query("SELECT events_event.*, i_items.title AS name, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE MONTH(FROM_UNIXTIME(start)) = :month AND YEAR(FROM_UNIXTIME(start)) = :year ORDER BY events_event.start LIMIT :limit,:max");
 	$database->bind(':month', $nmonth);
 	$database->bind(':year', $nyear);
 	$database->bind(':limit', $nav->start());
