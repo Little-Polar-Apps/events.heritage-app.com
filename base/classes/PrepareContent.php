@@ -66,6 +66,7 @@ class PrepareContent {
 			$content[$k]->dates = $dates;
 			$content[$k]->title = htmlspecialchars($itemObj->title);
 			$content[$k]->descr = htmlspecialchars($itemObj->description);
+			$content[$k]->hrtgs = $itemObj->hrtgs;
 
 		}
 
