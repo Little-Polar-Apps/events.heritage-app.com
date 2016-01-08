@@ -53,7 +53,7 @@ class PHPLogin
 
         // include the to-be-used language. feel free to translate your project and include something else.
         // detection of the language for the current user/browser
-        $user_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        $user_lang = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
         // if translation file for the detected language doesn't exist, we use default english file
         require_once(realpath(__DIR__ . '/../translations/' . (file_exists(realpath(__DIR__ . '/../translations/' . $user_lang . '.php')) ? $user_lang : 'en') . '.php'));
 

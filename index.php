@@ -232,7 +232,7 @@ $app->map('/search', function () use ($app, $hashids, $database, $content) {
 		$title = $app->request()->get('search');
 
 		if($title) {
-			$database->query("SELECT * FROM i_items WHERE title LIKE CONCAT('%', :title, '%') AND twitter != '' GROUP BY twitter");
+			$database->query("SELECT * FROM i_items WHERE title LIKE CONCAT('%', :title, '%')");
 			$database->bind(":title", urldecode($title));
 		} else {
 			$database->query("SELECT * FROM i_items WHERE twitter != '' GROUP BY twitter");
@@ -242,7 +242,7 @@ $app->map('/search', function () use ($app, $hashids, $database, $content) {
 
 		$rows = $database->resultset();
 
-		$app->view->user_vars['header']['title'] = 'Share';
+		$app->view->user_vars['header']['title'] = 'Search';
 		$app->view->set('content', PrepareContent::assignContent($rows));
 		$app->render('search.tpl.html');
 	} else {
