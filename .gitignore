@@ -1,3 +1,5 @@
 .env
 /vendor
 /config
+.rocketeer
+/base/cache/*
