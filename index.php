@@ -4,6 +4,10 @@ error_reporting(E_ALL);
 
 require 'vendor/autoload.php';
 
+$bugsnag = Bugsnag\Client::make("32e6b2d5194606dc547ba967c4a1fbde");
+
+Bugsnag\Handler::register($bugsnag);
+
 Dotenv::load(__DIR__);
 
 require 'base/config.php';
