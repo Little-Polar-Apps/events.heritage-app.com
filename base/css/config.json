@@ -1,0 +1,8 @@
+{
+    "use": ["autoprefixer", "postcss-import", "cssnano", "postcss-css-variables", "postcss-color-function", "postcss-discard-duplicates"],
+    "input": "input.css",
+    "output": "styles.css",
+    "autoprefixer": {
+        "browsers": "> 5%"
+    }
+}
