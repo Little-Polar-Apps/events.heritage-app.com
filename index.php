@@ -8,7 +8,8 @@ $bugsnag = Bugsnag\Client::make("32e6b2d5194606dc547ba967c4a1fbde");
 
 Bugsnag\Handler::register($bugsnag);
 
-Dotenv::load(__DIR__);
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
 
 require 'base/config.php';
 require 'base/classes/Database.php';

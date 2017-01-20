@@ -143,7 +143,7 @@ class PrepareContent {
 			$content->hash = $hashids->encrypt($content->id);
 			$content->unique = uniqid();
 			$content->dates = $dates;
-			$content->allday = (date('l d M Y', $content->start) == date('l d M Y', $content->end)) ? 'checked="checked" ' : false;
+			$content->allday = ($content->start === $content->end) ? 'checked="checked" ' : false;
 
 
 		return $content;

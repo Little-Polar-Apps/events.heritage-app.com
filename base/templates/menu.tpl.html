@@ -10,7 +10,12 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
+    			{mis:logged_in}
 				<li><a href="/login">Have an account?</a></li>
+				{/mis}
+				{set:logged_in}
+				<li><a href="/search">Search</a></li>
+				{/set}
 				{loop:custom_menu}
 					<li class="{set:current} active {/set}{set:subcats} dropdown {/set}">
 						{mis:subcats}<a href="{link}">{title}</a>{/mis}
