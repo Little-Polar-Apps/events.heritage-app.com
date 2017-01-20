@@ -74,7 +74,7 @@ a {
 
 a:hover,
 a:focus {
-    color: #7b7b7b;
+    color: color(var(--brand-color));
     text-decoration: none;
     outline: 0;
 }
@@ -244,7 +244,7 @@ fieldset[disabled] .btn-clear.active {
 }
 
 .pagination>li>a, .pagination>li>span {
-	color: #BF3A31;
+	color: color(var(--brand-color));
 	transition: all 0.35s ease-in-out;
 }
 
@@ -256,13 +256,13 @@ fieldset[disabled] .btn-clear.active {
 .pagination .active>span:focus{
 	z-index:2;
 	color:#fff;
-	background-color:#BF3A31;
-	border-color:#BF3A31;
+	background-color:color(var(--brand-color));
+	border-color:color(var(--brand-color));
 	cursor:default
 }
 
 .pagination>li>a:hover, .pagination>li>span:hover {
-	color: #BF3A31;
+	color: color(var(--brand-color));
 }
 
 /* -------------------------------------------------------------------
