@@ -15,7 +15,10 @@ Global values
 */
 
 @import 'bootstrap.css';
+@import 'bootstrap-datetimepicker.min.css';
 @import 'ss-gizmo.css';
+@import 'nprogress.css';
+
 
 :root {
     --brand-color: 		#5e98bf;
