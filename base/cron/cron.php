@@ -84,24 +84,24 @@ if($database->rowCount() > 0) {
 
 			$pushTime = time() + $time;
 
-			$url = 'https://api.parse.com/1/push';
-			$data = array(
-//			    'channel' => ['male', 'female', 'no-login'],
-				'where' => [
-					'channels' => [
-						'$in' => ['male', 'female', 'no-login']
-					],
-					'deviceType' => 'ios'
-				],
-//			    'type' => 'ios',
-			    "push_time" => gmdate("Y-m-d\TH:i:s\Z", $pushTime),
-			    'data' => array(
-			        'alert' => $row['title'] . ' @ ' . $row['name'] . ' - '. $alert,
-			        'hatype' => 'property',
-			        'id' => (int) $row['pid'],
-			        'sound' => 'push.caf',
-			    ),
-			);
+// 			$url = 'https://api.parse.com/1/push';
+// 			$data = array(
+// //			    'channel' => ['male', 'female', 'no-login'],
+// 				'where' => [
+// 					'channels' => [
+// 						'$in' => ['male', 'female', 'no-login']
+// 					],
+// 					'deviceType' => 'ios'
+// 				],
+// //			    'type' => 'ios',
+// 			    "push_time" => gmdate("Y-m-d\TH:i:s\Z", $pushTime),
+// 			    'data' => array(
+// 			        'alert' => $row['title'] . ' @ ' . $row['name'] . ' - '. $alert,
+// 			        'hatype' => 'property',
+// 			        'id' => (int) $row['pid'],
+// 			        'sound' => 'push.caf',
+// 			    ),
+// 			);
 			$_data = json_encode($data);
 			$headers = array(
 			    'X-Parse-Application-Id: ' . $APPLICATION_ID,
@@ -110,7 +110,32 @@ if($database->rowCount() > 0) {
 			    'Content-Length: ' . strlen($_data),
 			);
 
-			$connection->post('statuses/update', array('status' => $row['title'] . ' @ ' . $row['name'] . ' - '. $alert));
+			$url = parse_url($row->url, PHP_URL_HOST);
+
+    		$url = str_replace("www.", "", $url);
+
+    		$url = "https://whosername.com/api/M9hy9cMKiDMcPSz4uwzswL/".trim($url)."/json";
+
+    		$cURL = curl_init();
+
+    		curl_setopt($cURL, CURLOPT_URL, $url);
+    		curl_setopt($cURL, CURLOPT_HTTPGET, true);
+    		curl_setopt($cURL, CURLOPT_RETURNTRANSFER,1);
+
+    		curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
+    		    'Content-Type: application/json',
+    		    'Accept: application/json'
+    		));
+
+    		$whosername = curl_exec($cURL);
+
+    		curl_close($cURL);
+
+    		$twitterUsername = json_decode($whosername);
+
+    		$username = ($twitterUsername->properties->twitter) ? ' via @'.$twitterUsername->properties->twitter : '';
+
+			$connection->post('statuses/update', array('status' => $row['title'] . ' @ ' . $row['name'] . ' - '. $alert . $username));
 			slack($row['title'] . ' @ ' . $row['name'] . ' - '. $alert, 'general', ':heritage:');
 
 			$time = $time + 15*60;
