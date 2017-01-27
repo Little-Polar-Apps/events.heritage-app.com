@@ -88,7 +88,7 @@ class PrepareContent {
         			}
         		} else {
         			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
-        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k][$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
         			} else {
         				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
         			}
@@ -118,7 +118,7 @@ class PrepareContent {
         			}
         		} else {
         			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
-        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k][$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
         			} else {
         				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
         			}
@@ -146,7 +146,7 @@ class PrepareContent {
         			}
         		} else {
         			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
-        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k][$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
         			} else {
         				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
         			}
