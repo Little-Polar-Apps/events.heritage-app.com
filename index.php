@@ -266,9 +266,8 @@ $app->get('/api(/:key)(/:format)', function($key, $format) use($app, $database) 
 		$database->bind(':dirtitle', $key);
 
 	} else {
-		$database->query('SELECT * FROM i_items, events_event WHERE start > :time AND start < :plustwoweeks ORDER BY start');
+		$database->query('SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE events_event.start > :time ORDER BY events_event.start');
 		$database->bind(':time', strtotime("midnight", time()));
-        $database->bind(':plustwoweeks', strtotime('+2 weeks'));
 	}
 	$database->execute();
 
