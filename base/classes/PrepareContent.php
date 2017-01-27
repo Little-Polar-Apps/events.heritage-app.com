@@ -77,22 +77,22 @@ class PrepareContent {
 
 		global $hashids;
 
-		if(date('H:i', $content->start) == '00:00' && date('H:i', $content->end) == '00:00') {
-			if(date('l d M Y', $content->start) == date('l d M Y', $content->end)) {
-				$dates = date('l d M Y', $content->start);
-			} else {
-				$dates = date('l d M Y', $content->start) . ' to ' . date('l d M Y', $content->end);
-			}
-		} else {
-			if(date('l d M Y', $content->start) == date('l d M Y', $content->end)) {
-				$dates = date('l d M Y', $content->start) . ' ' . date('H:i', $content->start) . ' - ' . date('H:i', $content->end);
-			} else {
-				$dates = date('l d M Y', $content->start) . ' to ' . date('l d M Y', $content->end) . ' ' . date('H:i', $content->start) . ' - ' . date('H:i', $content->end);
-			}
-		}
-
 		if($format == 'rss') {
 			foreach($content as $k => $itemObj) {
+
+                if(date('H:i', $content[$k]->start) == '00:00' && date('H:i', $content[$k]->end) == '00:00') {
+        			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
+        				$dates = date('l d M Y', $content[$k]->start);
+        			} else {
+        				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end);
+        			}
+        		} else {
+        			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
+        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k][$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        			} else {
+        				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        			}
+        		}
 
 				$content[$k]->date = date('l d M Y', $itemObj->start);
 				$content[$k]->time = date('H:i', $itemObj->start);
@@ -102,6 +102,7 @@ class PrepareContent {
 				$content[$k]->tend = date('Y-m-d\TH:i:s.Z\Z', $itemObj->end);
 				$content[$k]->title = htmlspecialchars($itemObj->title);
 				$content[$k]->description = htmlspecialchars($itemObj->description);
+				$content[$k]->dates = $dates;
 
 			}
 
@@ -109,12 +110,27 @@ class PrepareContent {
 
 			foreach($content as $k => $itemObj) {
 
+                if(date('H:i', $content[$k]->start) == '00:00' && date('H:i', $content[$k]->end) == '00:00') {
+        			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
+        				$dates = date('l d M Y', $content[$k]->start);
+        			} else {
+        				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end);
+        			}
+        		} else {
+        			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
+        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k][$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        			} else {
+        				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        			}
+        		}
+
 				$content[$k]->date = date('l d M Y', $itemObj->start);
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
 				$content[$k]->title = json_encode(html_entity_decode($itemObj->title));
 				$content[$k]->description = json_encode(html_entity_decode($itemObj->description));
+				$content[$k]->dates = $dates;
 
 			}
 
@@ -122,12 +138,27 @@ class PrepareContent {
 
 			foreach($content as $k => $itemObj) {
 
+                if(date('H:i', $content[$k]->start) == '00:00' && date('H:i', $content[$k]->end) == '00:00') {
+        			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
+        				$dates = date('l d M Y', $content[$k]->start);
+        			} else {
+        				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end);
+        			}
+        		} else {
+        			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
+        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k][$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        			} else {
+        				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        			}
+        		}
+
 				$content[$k]->date = date('l d M Y', $itemObj->start);
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
 				$content[$k]->title = htmlspecialchars($itemObj->title);
 				$content[$k]->descr = htmlspecialchars($itemObj->description);
+				$content[$k]->dates = $dates;
 
 			}
 
