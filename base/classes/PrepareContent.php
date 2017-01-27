@@ -84,6 +84,8 @@ class PrepareContent {
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
+				$content[$k]->tstart = date('yyyy-MM-dd'T'HH:mm:ssXXX', $itemObj->start);
+				$content[$k]->tend = date('yyyy-MM-dd'T'HH:mm:ssXXX', $itemObj->end);
 				$content[$k]->title = htmlspecialchars($itemObj->title);
 				$content[$k]->description = htmlspecialchars($itemObj->description);
 
