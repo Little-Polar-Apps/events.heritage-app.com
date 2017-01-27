@@ -77,6 +77,20 @@ class PrepareContent {
 
 		global $hashids;
 
+		if(date('H:i', $content->start) == '00:00' && date('H:i', $content->end) == '00:00') {
+			if(date('l d M Y', $content->start) == date('l d M Y', $content->end)) {
+				$dates = date('l d M Y', $content->start);
+			} else {
+				$dates = date('l d M Y', $content->start) . ' to ' . date('l d M Y', $content->end);
+			}
+		} else {
+			if(date('l d M Y', $content->start) == date('l d M Y', $content->end)) {
+				$dates = date('l d M Y', $content->start) . ' ' . date('H:i', $content->start) . ' - ' . date('H:i', $content->end);
+			} else {
+				$dates = date('l d M Y', $content->start) . ' to ' . date('l d M Y', $content->end) . ' ' . date('H:i', $content->start) . ' - ' . date('H:i', $content->end);
+			}
+		}
+
 		if($format == 'rss') {
 			foreach($content as $k => $itemObj) {
 
