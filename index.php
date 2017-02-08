@@ -256,23 +256,47 @@ $app->map('/search', function () use ($app, $hashids, $database, $content) {
 
 })->via('GET', 'POST');
 
-$app->get('/api(/:key)(/:format)', function($key, $format) use($app, $database) {
+$app->get('/api(/:key)(/page/:number)(/:format)', function($key, $number=1, $format) use($app, $database) {
+
+    if(!$number) {
+        $number = 1;
+    }
 
 	$key = preg_replace("/-8xhKhJ18Iez/", "", $key);
 
 	if($key) {
+
+    	// Closed API Key https://events.heritage-app.com/api/-8xhKhJ18Iez/MD5~DIRTITLE~/json
+
 		$database->query("SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE MD5(dirtitle) = :dirtitle AND events_event.start > :time ORDER BY events_event.start");
 		$database->bind(':time', time());
 		$database->bind(':dirtitle', $key);
 
 	} else {
+
+    	// Open API https://events.heritage-app.com/api/-8xhKhJ18Iez/json
+
 		$database->query('SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE events_event.start > :time ORDER BY events_event.start');
 		$database->bind(':time', strtotime("midnight", time()));
+
+		$total     = $database->rowCount();
+    	$max       = 6;
+    	$maxNum    = 100;
+
+    	$nav       = new Pagination($max, $total, $maxNum, (int) $number, '');
+
+    	$database->query("SELECT events_event.*, i_items.title AS name, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :time ORDER BY events_event.start LIMIT :limit,:max");
+		$database->bind(':time', time());
+    	$database->bind(':limit', $nav->start());
+    	$database->bind(':max', $max);
+
 	}
 	$database->execute();
 
 
 	$content = $database->resultset();
+
+	$app->view->user_vars['main']['page'] = $number;
 
 	if($format === "rss") {
 

@@ -3,3 +3,5 @@
 /config
 .rocketeer
 /base/cache/*
+.vagrant
+Vagrantfile
