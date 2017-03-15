@@ -256,7 +256,7 @@ $app->map('/search', function () use ($app, $hashids, $database, $content) {
 
 })->via('GET', 'POST');
 
-$app->get('/api(/:key)(/page/:number)(/:format)', function($key, $number=1, $format) use($app, $database) {
+$app->get('/api(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', function($key, $number=1, $format, $latitude, $longitude) use($app, $database) {
 
     if(!$number) {
         $number = 1;
@@ -285,10 +285,14 @@ $app->get('/api(/:key)(/page/:number)(/:format)', function($key, $number=1, $for
 
     	$nav       = new Pagination($max, $total, $maxNum, (int) $number, '');
 
-    	$database->query("SELECT events_event.*, i_items.title AS name, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :time ORDER BY events_event.start LIMIT :limit,:max");
+
+    	$database->query("SELECT i_items.*, i_items.title AS name, (( 3959 * acos( cos( radians(:latitude) ) * cos( radians( i_items.latitude ) ) * cos( radians( i_items.longitude ) - radians(:longitude) ) + sin( radians(:latitude) ) * sin( radians( i_items.latitude ) ) ) ) ) AS distance, events_event.*, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :time ORDER BY events_event.start LIMIT :limit,:max");
 		$database->bind(':time', time());
     	$database->bind(':limit', $nav->start());
     	$database->bind(':max', $max);
+    	$database->bind(':latitude', $latitude);
+    	$database->bind(':longitude', $longitude);
+
 
 	}
 	$database->execute();
