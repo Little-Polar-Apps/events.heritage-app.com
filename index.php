@@ -318,6 +318,73 @@ $app->get('/api(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', funct
 
 });
 
+$app->map('/api(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', function($key, $number=1, $format, $latitude='', $longitude='') use($app, $database) {
+
+    if(!$number) {
+        $number = 1;
+    }
+
+	$key = preg_replace("/-8xhKhJ18Iez/", "", $key);
+
+	if($key) {
+
+    	// Closed API Key https://events.heritage-app.com/api/-8xhKhJ18Iez/MD5~DIRTITLE~/json
+
+		$database->query("SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE MD5(dirtitle) = :dirtitle AND events_event.start > :time ORDER BY events_event.start");
+		$database->bind(':time', time());
+		$database->bind(':dirtitle', $key);
+
+	} else {
+
+    	// Open API https://events.heritage-app.com/api/-8xhKhJ18Iez/json
+
+		$database->query('SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE events_event.start > :time ORDER BY events_event.start');
+		$database->bind(':time', strtotime("midnight", time()));
+
+		$total     = $database->rowCount();
+  	$max       = 6;
+  	$maxNum    = 100;
+
+  	$nav       = new Pagination($max, $total, $maxNum, (int) $number, '');
+
+    if(!$latitude && !$longitude) {
+      $database->query("SELECT i_items.*, i_items.title AS name, events_event.*, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :time ORDER BY events_event.start LIMIT :limit,:max");
+      $database->bind(':time', time());
+    	$database->bind(':limit', $nav->start());
+    	$database->bind(':max', $max);
+    } else {
+    	$database->query("SELECT i_items.*, i_items.title AS name, (( 3959 * acos( cos( radians(:latitude) ) * cos( radians( i_items.latitude ) ) * cos( radians( i_items.longitude ) - radians(:longitude) ) + sin( radians(:latitude) ) * sin( radians( i_items.latitude ) ) ) ) ) AS distance, events_event.*, i_items.hrtgs FROM events_event LEFT JOIN i_items ON i_items.id = events_event.pid WHERE events_event.start >= :time ORDER BY events_event.start LIMIT :limit,:max");
+      $database->bind(':time', time());
+    	$database->bind(':limit', $nav->start());
+    	$database->bind(':max', $max);
+    	$database->bind(':latitude', $latitude);
+    	$database->bind(':longitude', $longitude);
+    }
+
+	}
+	$database->execute();
+
+
+	$content = $database->resultset();
+
+	$app->view->user_vars['main']['page'] = $number;
+
+	if($format === "rss") {
+
+		$app->response->headers->set('Content-Type', 'application/rss+xml');
+		$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'rss'));
+		$app->render(array('rss.tpl.html'));
+
+	} elseif($format === "json") {
+
+		$app->response->headers->set('Content-Type', 'application/json');
+		$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'json'));
+		$app->render(array('json.tpl.html'));
+
+	}
+
+})->via('GET', 'POST');
+
 $app->map('/:id/:hrtgs/:dirtitle(/page/:number)(/:format)(/edit/:edit)', function($id, $hrtgs, $dirtitle, $number=1, $format=null, $edit=null) use ($app, $database, $hashids, $post, $login) {
 
 	if($login->isUserLoggedIn()) {
@@ -433,30 +500,30 @@ $app->get('/cron', function () use ($app, $database, $slack, $cb) {
 
 				$pushTime = time() + $time;
 
-				$url = 'https://api.parse.com/1/push';
-				$data = array(
-					'where' => [
-						'channels' => [
-							'$in' => ['male', 'female', 'no-login']
-							//'$in' => ['test']
-						],
-						'deviceType' => 'ios'
-					],
-				    "push_time" => gmdate("Y-m-d\TH:i:s\Z", $pushTime),
-				    'data' => array(
-				        'alert' => $row->title . ' @ ' . $row->name . ' - '. $alert,
-				        'hatype' => 'property',
-				        'id' => (int) $row->pid,
-				        'sound' => 'push.caf',
-				    ),
-				);
-				$_data = json_encode($data);
-				$headers = array(
-				    'X-Parse-Application-Id: ' . $APPLICATION_ID,
-				    'X-Parse-REST-API-Key: ' . $REST_API_KEY,
-				    'Content-Type: application/json',
-				    'Content-Length: ' . strlen($_data),
-				);
+// 				$url = 'https://api.parse.com/1/push';
+// 				$data = array(
+// 					'where' => [
+// 						'channels' => [
+// 							'$in' => ['male', 'female', 'no-login']
+// 							//'$in' => ['test']
+// 						],
+// 						'deviceType' => 'ios'
+// 					],
+// 				    "push_time" => gmdate("Y-m-d\TH:i:s\Z", $pushTime),
+// 				    'data' => array(
+// 				        'alert' => $row->title . ' @ ' . $row->name . ' - '. $alert,
+// 				        'hatype' => 'property',
+// 				        'id' => (int) $row->pid,
+// 				        'sound' => 'push.caf',
+// 				    ),
+// 				);
+// 				$_data = json_encode($data);
+// 				$headers = array(
+// 				    'X-Parse-Application-Id: ' . $APPLICATION_ID,
+// 				    'X-Parse-REST-API-Key: ' . $REST_API_KEY,
+// 				    'Content-Type: application/json',
+// 				    'Content-Length: ' . strlen($_data),
+// 				);
 
 				$slack->send($row->title . ' @ ' . $row->name . ' - '. $alert, 'general', ':heritage:');
 
