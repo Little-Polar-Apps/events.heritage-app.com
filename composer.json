@@ -11,7 +11,7 @@
         "little-polar-apps/ets-view": "dev-master",
         "jublonet/codebird-php": "dev-master",
         "jwhennessey/phpinsight": "dev-master",
-        "polem/slack-notifier": "dev-master",
-        "bugsnag/bugsnag": "^3.0" 
+        "bugsnag/bugsnag": "^3.0",
+        "maknz/slack": "^1.7" 
     }
 }

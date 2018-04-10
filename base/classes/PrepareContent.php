@@ -118,9 +118,9 @@ class PrepareContent {
         			}
         		} else {
         			if(date('l d M Y', $content[$k]->start) == date('l d M Y', $content[$k]->end)) {
-        				$dates = date('l d M Y', $content[$k]->start) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        				$dates = date('l d M Y', $content[$k]->start) . ', ' . date('h:i A', $content[$k]->start) . ' to ' . date('h:i A', $content[$k]->end);
         			} else {
-        				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end) . ' ' . date('H:i', $content[$k]->start) . ' - ' . date('H:i', $content[$k]->end);
+        				$dates = date('l d M Y', $content[$k]->start) . ' to ' . date('l d M Y', $content[$k]->end) . ', ' . date('h:i A', $content[$k]->start) . ' to ' . date('h:i A', $content[$k]->end);
         			}
         		}
 
@@ -128,7 +128,7 @@ class PrepareContent {
 				$content[$k]->time = date('H:i', $itemObj->start);
 				$content[$k]->enddate = date('l d M Y', $itemObj->end);
 				$content[$k]->endtime = date('H:i', $itemObj->end);
-				$content[$k]->title = json_encode(html_entity_decode($itemObj->title));
+				$content[$k]->title = $itemObj->title;
 				$content[$k]->description = json_encode(html_entity_decode($itemObj->description));
 				$content[$k]->dates = $dates;
 

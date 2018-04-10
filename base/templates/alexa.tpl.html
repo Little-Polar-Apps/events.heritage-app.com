@@ -1,0 +1,48 @@
+{
+"version": "1.0",
+"status": "success",
+"response": {
+  {loop:content}
+  "outputSpeech": {
+    "type": "PlainText",
+    "text": "The next event is: {title}. at {name}, on {dates}",
+    "ssml": "<speak>The next event is: {title}<break strength=\"medium\"/> at {name}<break strength=\"medium\"/> on {dates}</speak>"
+  },
+  "card": {
+    "type": "Standard",
+    "title": "{title}",
+    "content": "At {name} on {dates}",
+    "text": "At {name} on {dates}",
+    "image": {
+
+    }
+  },
+  "reprompt": {
+    "outputSpeech": {
+      "type": "PlainText",
+      "text": "The next event is: {title}. at {name}, on {dates}",
+      "ssml": "<speak>The next event is: {title}<break strength=\"medium\"/> at {name}<break strength=\"medium\"/> on {dates}</speak>"
+    }
+  },
+  "shouldEndSession": true
+  {/loop}
+}
+
+}
+{*
+"results":[
+{loop:content}{
+	"pid": {pid},
+	"title": {title},
+	"description": {description},
+	"url": "{url}",
+	"start": {start},
+	"end": {end},
+	"dates": "{dates}",
+	"name":"{name}",
+	"address":"{address}",
+	"county":"{county}",
+	"distance":"{php}round({distance}){/php}"
+}{set:_not_last},{/set}{/loop}]
+}
+*}

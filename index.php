@@ -33,7 +33,19 @@ $footer     = new stdClass();
 $content    = new stdClass();
 $menu       = new stdClass();
 $addExtras  = new stdClass();
-$slack 		= new Slack("heritage", "HMt7775INxoEQmadRVhmTfux", "HeritageEventsBot");
+//$slack 		= new Slack("heritage", "HMt7775INxoEQmadRVhmTfux", "HeritageEventsBot");
+$client = new Slack\Client('littlepolarapps', 'HMt7775INxoEQmadRVhmTfux');
+$slack = new Slack\Notifier($client);
+
+$message = new Slack\Message\Message('Hello world');
+
+$message->setChannel('#test')
+    ->setMrkdwn(true)
+    ->setIconEmoji(':ghost:')
+    ->setUsername('slack-php');
+
+$slack->notify($message);
+
 $cb 		= \Codebird\Codebird::getInstance();
 $hashids 	= new Hashids\Hashids('History is around us');
 
@@ -318,31 +330,30 @@ $app->get('/api(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', funct
 
 });
 
-$app->map('/api(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', function($key, $number=1, $format, $latitude='', $longitude='') use($app, $database) {
+$app->map('/alexa(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', function($key, $number=1, $format, $latitude='', $longitude='') use($app, $database, $slack) {
+
+  $slack->send(print_r($_POST), 'general', ':heritage:');
+//    deviceId = this.event.context.System.device.deviceId
+  //  https://api.amazonalexa.com/v1/devices/*deviceId*/settings/address/countryAndPostalCode
 
     if(!$number) {
         $number = 1;
     }
 
-	$key = preg_replace("/-8xhKhJ18Iez/", "", $key);
+    if(isset($_POST)) {
+      //print_r($_POST);
+      $app->view->user_vars['main']['content']['raw'] = $_POST;
+    }
 
-	if($key) {
+    $key = preg_replace("/-8xhKhJ18Iez/", "", $key);
 
-    	// Closed API Key https://events.heritage-app.com/api/-8xhKhJ18Iez/MD5~DIRTITLE~/json
-
-		$database->query("SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE MD5(dirtitle) = :dirtitle AND events_event.start > :time ORDER BY events_event.start");
-		$database->bind(':time', time());
-		$database->bind(':dirtitle', $key);
-
-	} else {
-
-    	// Open API https://events.heritage-app.com/api/-8xhKhJ18Iez/json
+	 	// Open API https://events.heritage-app.com/api/-8xhKhJ18Iez/json
 
 		$database->query('SELECT * FROM i_items LEFT JOIN events_event ON i_items.id = events_event.pid WHERE events_event.start > :time ORDER BY events_event.start');
 		$database->bind(':time', strtotime("midnight", time()));
 
 		$total     = $database->rowCount();
-  	$max       = 6;
+  	$max       = 1;
   	$maxNum    = 100;
 
   	$nav       = new Pagination($max, $total, $maxNum, (int) $number, '');
@@ -361,7 +372,6 @@ $app->map('/api(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', funct
     	$database->bind(':longitude', $longitude);
     }
 
-	}
 	$database->execute();
 
 
@@ -369,19 +379,9 @@ $app->map('/api(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', funct
 
 	$app->view->user_vars['main']['page'] = $number;
 
-	if($format === "rss") {
-
-		$app->response->headers->set('Content-Type', 'application/rss+xml');
-		$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'rss'));
-		$app->render(array('rss.tpl.html'));
-
-	} elseif($format === "json") {
-
-		$app->response->headers->set('Content-Type', 'application/json');
-		$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'json'));
-		$app->render(array('json.tpl.html'));
-
-	}
+	$app->response->headers->set('Content-Type', 'application/json');
+	$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'json'));
+	$app->render(array('alexa.tpl.html'));
 
 })->via('GET', 'POST');
 
