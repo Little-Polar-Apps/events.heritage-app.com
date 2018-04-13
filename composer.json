@@ -1,6 +1,6 @@
 {
     "require": {
-        "slim/slim": "2.*",
+        "slim/slim": "~2.0",
         "slim/views": "0.1.*",
         "stripe/stripe-php": "dev-master",
         "vlucas/phpdotenv": "*",
@@ -12,6 +12,6 @@
         "jublonet/codebird-php": "dev-master",
         "jwhennessey/phpinsight": "dev-master",
         "bugsnag/bugsnag": "^3.0",
-        "maknz/slack": "^1.7" 
+        "maknz/slack": "^1.7"
     }
 }
