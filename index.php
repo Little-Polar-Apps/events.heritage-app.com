@@ -27,24 +27,24 @@ include 'base/classes/pagination.php';
 $app        = new \Slim\Slim();
 $login      = new PHPLogin();
 $database   = new Database();
-$post		= new Post();
+$post		    = new Post();
 $header     = new stdClass();
 $footer     = new stdClass();
 $content    = new stdClass();
 $menu       = new stdClass();
 $addExtras  = new stdClass();
-//$slack 		= new Slack("heritage", "HMt7775INxoEQmadRVhmTfux", "HeritageEventsBot");
-$client = new Slack\Client('littlepolarapps', 'HMt7775INxoEQmadRVhmTfux');
-$slack = new Slack\Notifier($client);
+$slack 		 = new Slack("heritage", "HMt7775INxoEQmadRVhmTfux", "HeritageEventsBot");
+//$client = new Slack\Client('littlepolarapps', 'HMt7775INxoEQmadRVhmTfux');
+//$slack = new Slack\Notifier($client);
 
-$message = new Slack\Message\Message('Hello world');
+//$message = new Slack\Message\Message('Hello world');
 
-$message->setChannel('#test')
-    ->setMrkdwn(true)
-    ->setIconEmoji(':ghost:')
-    ->setUsername('slack-php');
-
-$slack->notify($message);
+// $message->setChannel('#test')
+//     ->setMrkdwn(true)
+//     ->setIconEmoji(':ghost:')
+//     ->setUsername('slack-php');
+//
+// $slack->notify($message);
 
 $cb 		= \Codebird\Codebird::getInstance();
 $hashids 	= new Hashids\Hashids('History is around us');
@@ -332,7 +332,6 @@ $app->get('/api(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', funct
 
 $app->map('/alexa(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', function($key, $number=1, $format, $latitude='', $longitude='') use($app, $database, $slack) {
 
-  $slack->send(print_r($_POST), 'general', ':heritage:');
 //    deviceId = this.event.context.System.device.deviceId
   //  https://api.amazonalexa.com/v1/devices/*deviceId*/settings/address/countryAndPostalCode
 
@@ -341,8 +340,8 @@ $app->map('/alexa(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', fun
     }
 
     if(isset($_POST)) {
-      //print_r($_POST);
-      $app->view->user_vars['main']['content']['raw'] = $_POST;
+      	$slack->send(file_get_contents('php://input'), 'general', ':heritage:');
+     // $app->view->user_vars['main']['content']['raw'] = $_POST;
     }
 
     $key = preg_replace("/-8xhKhJ18Iez/", "", $key);
@@ -382,6 +381,7 @@ $app->map('/alexa(/:key)(/page/:number)(/:format)(/:latitude)(/:longitude)', fun
 	$app->response->headers->set('Content-Type', 'application/json');
 	$app->view->set('content', PrepareContent::getEventsItemsFeed($content, 'json'));
 	$app->render(array('alexa.tpl.html'));
+
 
 })->via('GET', 'POST');
 
