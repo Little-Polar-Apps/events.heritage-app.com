@@ -12,6 +12,6 @@
         "jublonet/codebird-php": "dev-master",
         "jwhennessey/phpinsight": "dev-master",
         "bugsnag/bugsnag": "^3.0",
-        "maknz/slack": "^1.7"
+        "polem/slack-notifier": "^0.2.1"
     }
 }
